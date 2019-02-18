@@ -3,9 +3,9 @@ import re
 from django.apps import apps
 from django.http import Http404
 from django.shortcuts import render
+from wagtail.admin.modal_workflow import render_modal_workflow
+from wagtail.search.index import Indexed
 from wagtail.utils.pagination import paginate
-from wagtail.wagtailadmin.modal_workflow import render_modal_workflow
-from wagtail.wagtailsearch.index import Indexed
 
 from . import registry
 
@@ -85,5 +85,9 @@ def chooser(request, app_label, model_name, filter_name=None):
         return render_modal_workflow(
             request,
             'wagtailmodelchooser/modal.html',
-            'wagtailmodelchooser/modal.js',
-            context)
+            None,  # Deprecated argument (still required in Wagtail 2.2)
+            template_vars=context,
+            json_data={
+                'step': 'show_model_chooser'
+            }
+        )
