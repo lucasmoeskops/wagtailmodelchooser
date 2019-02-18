@@ -60,7 +60,10 @@ def chooser(request, app_label, model_name, filter_name=None):
             filter_func = registry.filters[model, filter_name]
         except KeyError:
             raise Http404
-        qs = filter_func(qs)
+        try:
+            qs = filter_func(qs, request)
+        except TypeError:
+            qs = filter_func(qs)
 
     paginator, page = paginate(request, qs, per_page=10)
     ajax = 'ajax' in request.GET
